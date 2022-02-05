@@ -1,5 +1,8 @@
 import { ApolloServer, gql } from "apollo-server-micro";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  UserInputError,
+} from "apollo-server-core";
 import { NextApiHandler } from "next";
 import mysql from "serverless-mysql";
 import { OkPacket } from "mysql";
@@ -129,8 +132,14 @@ const resolvers: Resolvers<ApolloContext> = {
 
       return updatedTask;
     },
-    deleteTask(parent, args, context) {
-      return null;
+    async deleteTask(parent, args, context) {
+      const task = await getTaskById(args.id, context.db);
+      if (!task) {
+        throw new UserInputError("Could not find your task.");
+      }
+      await context.db.query("DELETE FROM tasks WHERE id = ?", [args.id]);
+
+      return task;
     },
   },
 };
