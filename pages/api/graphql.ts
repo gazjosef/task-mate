@@ -3,11 +3,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { NextApiHandler } from "next";
 import mysql from "serverless-mysql";
 import { OkPacket } from "mysql";
-import {
-  Resolver,
-  Resolvers,
-  TaskStatus,
-} from "../../generated/graphql-backend";
+import { Resolvers, TaskStatus } from "../../generated/graphql-backend";
 
 const typeDefs = gql`
   enum TaskStatus {
